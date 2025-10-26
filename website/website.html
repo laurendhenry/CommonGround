@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CommonGround - Empowering Farmers, Protecting Communities</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background: #fafafa;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 5%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        nav .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d5016;
+        }
+
+        .logo-sunflower {
+            width: 40px;
+            height: 40px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #4a7c2c;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #4a7c2c;
+            border: 2px solid #4a7c2c;
+        }
+
+        .btn-login:hover {
+            background: #4a7c2c;
+            color: white;
+        }
+
+        .btn-signup {
+            background: #4a7c2c;
+            color: white;
+        }
+
+        .btn-signup:hover {
+            background: #3a6322;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 124, 44, 0.3);
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 120px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        #home {
+            background: linear-gradient(to bottom, #f8faf6, #ffffff);
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+        }
+
+        .hero-sunflower {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            line-height: 1.1;
+        }
+
+        .brand-name {
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 3rem;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+        }
+
+        /* About Section */
+        #about {
+            background: white;
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #2d5016;
+        }
+
+        .section-description {
+            color: #666;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin-bottom: 3rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: #f8faf6;
+            border-radius: 12px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid #e8ebe6;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            color: #2d5016;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* Dashboard Section */
+        #dashboard {
+            background: linear-gradient(to bottom, #f8faf6, #ffffff);
+        }
+
+        .dashboard-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border: 2px solid #e8ebe6;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-card h3 {
+            color: #2d5016;
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .dashboard-card ul {
+            list-style: none;
+            color: #555;
+        }
+
+        .dashboard-card li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 1rem;
+        }
+
+        .dashboard-card li:last-child {
+            border-bottom: none;
+        }
+
+        .dashboard-card li:before {
+            content: '✓';
+            color: #5a9c34;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        /* Predictions Section */
+        #predictions {
+            background: white;
+        }
+
+        .predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .prediction-item {
+            background: #f8faf6;
+            border-left: 4px solid #5a9c34;
+            padding: 1.3rem 1.5rem;
+            border-radius: 8px;
+            color: #333;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .prediction-item:hover {
+            background: #eef3e9;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Regional Insights Section */
+        #regional {
+            background: linear-gradient(to bottom, #f8faf6, #ffffff);
+        }
+
+        .map-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .map-feature {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e8ebe6;
+        }
+
+        .map-feature:hover {
+            border-color: #5a9c34;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .map-feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .map-feature h4 {
+            color: #2d5016;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Partners Section */
+        #partners {
+            background: white;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .partner-card {
+            background: #f8faf6;
+            border-radius: 12px;
+            padding: 3rem;
+            border: 1px solid #e8ebe6;
+            transition: all 0.3s ease;
+        }
+
+        .partner-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .partner-card h3 {
+            color: #2d5016;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .partner-card p {
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #5a9c34;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: linear-gradient(to bottom, #f8faf6, #ffffff);
+            padding-bottom: 150px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            border: 2px solid #e8ebe6;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            border-color: #5a9c34;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .team-member h3 {
+            color: #2d5016;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .team-member .major {
+            color: #4a7c2c;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .team-member .specialization {
+            color: #888;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .team-member .email {
+            color: #4a7c2c;
+            font-size: 1rem;
+            margin-top: 1rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .team-member .email:hover {
+            color: #2d5016;
+            text-decoration: underline;
+        }
+
+        .fun-fact {
+            background: #eef3e9;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+            color: #555;
+            text-align: center;
+            font-style: italic;
+            border-left: 4px solid #5a9c34;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .dashboard-preview,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 100px 5%;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .scroll-indicator::after {
+            content: '↓';
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">
+                <svg class="logo-sunflower" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Petals -->
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(0 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(30 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(60 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(90 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(120 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(150 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(180 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(210 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(240 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(270 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(300 100 100)"/>
+                    <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(330 100 100)"/>
+                    <!-- Center -->
+                    <circle cx="100" cy="100" r="35" fill="#8B4513"/>
+                    <circle cx="100" cy="100" r="28" fill="#D2691E" opacity="0.7"/>
+                </svg>
+                <span>CommonGround</span>
+            </div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About CG</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#predictions">Predictions</a></li>
+                <li><a href="#regional">Regional Insights</a></li>
+                <li><a href="#partners">For Partners</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-login">LOGIN</button>
+                <button class="btn btn-signup">SIGN UP</button>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="section-content hero-content">
+            <svg class="hero-sunflower" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Petals -->
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(0 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(30 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(60 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(90 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(120 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(150 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(180 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(210 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(240 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(270 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(300 100 100)"/>
+                <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(330 100 100)"/>
+                <!-- Center -->
+                <circle cx="100" cy="100" r="35" fill="#8B4513"/>
+                <circle cx="100" cy="100" r="28" fill="#D2691E" opacity="0.7"/>
+            </svg>
+            <h1><span class="brand-name">CommonGround</span></h1>
+            <p class="tagline">Empowering Farmers, Protecting Communities</p>
+            <p class="hero-description">
+                Farmers collect the most valuable climate data in the world — but it's siloed. 
+                Our platform uses Claude to connect, interpret, and act on that data in real time. 
+                Farmers improve practices, NGOs respond faster, and governments see risk before disaster strikes.
+            </p>
+            <div class="cta-buttons">
+                <button class="btn btn-signup btn-large">Get Started</button>
+                <button class="btn btn-login btn-large">Learn More</button>
+            </div>
+        </div>
+        <div class="scroll-indicator">Scroll to explore</div>
+    </section>
+
+    <section id="about">
+        <div class="section-content">
+            <h2>What is <span class="brand-name">CommonGround</span>?</h2>
+            <p class="section-description">
+                <span class="brand-name">CommonGround</span> transforms isolated farm data into actionable intelligence. We connect real-time sensor data 
+                with regional weather patterns, market trends, and predictive analytics to create a comprehensive 
+                agricultural risk assessment platform.
+            </p>
+            <div class="about-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌾</div>
+                    <h3>For Farmers</h3>
+                    <p>Real-time monitoring of temperature, humidity, and fire risk. Get SMS alerts and personalized 
+                    recommendations to protect your crops and livelihood.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>For NGOs</h3>
+                    <p>Identify vulnerable populations and respond faster to agricultural crises with priority intervention 
+                    maps and resource allocation recommendations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3>For Governments</h3>
+                    <p>Predictive risk assessments, regional crop yield forecasts, and disaster heat maps to see risk 
+                    before disaster strikes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard">
+        <div class="section-content">
+            <h2>Personal Farmer Dashboard</h2>
+            <p class="section-description">
+                Your command center for real-time farm monitoring and insights.
+            </p>
+            <div class="dashboard-preview">
+                <div class="dashboard-card">
+                    <h3>🌡️ Climate Monitoring</h3>
+                    <ul>
+                        <li>Real-time temperature tracking</li>
+                        <li>Humidity data collection</li>
+                        <li>Integration with Open-Meteo</li>
+                        <li>Regional weather comparison</li>
+                        <li>Historical trend analysis</li>
+                    </ul>
+                </div>
+                <div class="dashboard-card">
+                    <h3>🔥 Fire Detection System</h3>
+                    <ul>
+                        <li>Real-time flame sensors</li>
+                        <li>Instant SMS alerts</li>
+                        <li>Seasonal fire risk plotting</li>
+                        <li>Emergency response integration</li>
+                        <li>Community notification system</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="predictions">
+        <div class="section-content">
+            <h2>Agricultural Risk & Food Security Alerts</h2>
+            <p class="section-description">
+                Advanced predictions that go beyond what weather apps can tell you.
+            </p>
+            <div class="predictions-grid">
+                <div class="prediction-item">Crop Stress Index</div>
+                <div class="prediction-item">Irrigation Recommendations</div>
+                <div class="prediction-item">Yield Prediction</div>
+                <div class="prediction-item">Pest/Disease Risk Alerts</div>
+                <div class="prediction-item">Regional Crop Failure Probability</div>
+                <div class="prediction-item">Fire Hazard Zones</div>
+                <div class="prediction-item">Vulnerable Population Estimates</div>
+                <div class="prediction-item">Priority Intervention Map</div>
+                <div class="prediction-item">State/Regional Crop Yield Forecast</div>
+                <div class="prediction-item">Disaster Risk Heat Map</div>
+                <div class="prediction-item">Resource Allocation Recommendation</div>
+                <div class="prediction-item">Climate Resilience Metrics</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="regional">
+        <div class="section-content">
+            <h2>Regional Insights</h2>
+            <p class="section-description">
+                Interactive maps powered by Mapbox and Leaflet showing real-time regional trends across California.
+            </p>
+            <div class="map-features">
+                <div class="map-feature">
+                    <div class="map-feature-icon">🔥</div>
+                    <h4>Forest Fires</h4>
+                </div>
+                <div class="map-feature">
+                    <div class="map-feature-icon">🌍</div>
+                    <h4>Earthquakes</h4>
+                </div>
+                <div class="map-feature">
+                    <div class="map-feature-icon">💰</div>
+                    <h4>Crop Prices</h4>
+                </div>
+                <div class="map-feature">
+                    <div class="map-feature-icon">📊</div>
+                    <h4>Crop Yields</h4>
+                </div>
+                <div class="map-feature">
+                    <div class="map-feature-icon">🐛</div>
+                    <h4>Pests</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="partners">
+        <div class="section-content">
+            <h2>For Partners</h2>
+            <div class="partners-grid">
+                <div class="partner-card">
+                    <h3>For Businesses</h3>
+                    <p>Access comprehensive risk assessment reports to make informed decisions about agricultural investments, 
+                    supply chain management, and market opportunities. Minimize losses and maximize efficiency.</p>
+                    <div class="testimonial">
+                        "<span class="brand-name">CommonGround</span>'s predictive analytics helped us reduce crop loss by 40% and optimize our supply chain."
+                    </div>
+                </div>
+                <div class="partner-card">
+                    <h3>For NGOs</h3>
+                    <p>Leverage real-time data to identify communities at risk, allocate resources effectively, and respond 
+                    to agricultural crises before they escalate. Make every dollar count.</p>
+                    <div class="testimonial">
+                        "The priority intervention maps allowed us to reach vulnerable farmers weeks before disaster struck."
+                    </div>
+                </div>
+                <div class="partner-card">
+                    <h3>For Governments</h3>
+                    <p>Comprehensive regional forecasts, disaster risk assessments, and climate resilience metrics to inform 
+                    policy decisions and protect citizens. See the full picture.</p>
+                    <div class="testimonial">
+                        "<span class="brand-name">CommonGround</span>'s state-wide yield forecasts transformed how we approach agricultural policy and emergency response."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-content">
+            <h2>Contact Us</h2>
+            <div class="contact-grid">
+                <div class="team-member">
+                    <h3>Sagarika Srinivasan</h3>
+                    <p class="major">Computer Science</p>
+                    <p class="specialization">Human-Computer Interaction and Artificial Intelligence<br>Public Policy</p>
+                    <a href="mailto:ssrinivasan358@gatech.edu" class="email">ssrinivasan358@gatech.edu</a>
+                </div>
+                <div class="team-member">
+                    <h3>Lauren Henry</h3>
+                    <p class="major">Computer Science</p>
+                    <p class="specialization">Information Networks and Devices<br>Global Engagement</p>
+                    <a href="mailto:lhenry38@gatech.edu" class="email">lhenry38@gatech.edu</a>
+                </div>
+            </div>
+            <div class="fun-fact">
+                Fun fact! We respond to emails faster than our own texts ;)<br>
+                Feel free to hit us up with questions, project ideas, a job, you name it!
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Add active state to nav links on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Button interactions
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.textContent === 'LOGIN' || this.textContent === 'SIGN UP') {
+                    alert('Authentication system coming soon!');
+                } else if (this.textContent === 'Get Started') {
+                    document.querySelector('#dashboard').scrollIntoView({ behavior: 'smooth' });
+                } else if (this.textContent === 'Learn More') {
+                    document.querySelector('#about').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Map feature interactions
+        document.querySelectorAll('.map-feature').forEach(feature => {
+            feature.addEventListener('click', function() {
+                const featureName = this.querySelector('h4').textContent;
+                alert(`Interactive map for ${featureName} coming soon! This will show real-time data across California.`);
+            });
+        });
+    </script>
+</body>
+</html>
