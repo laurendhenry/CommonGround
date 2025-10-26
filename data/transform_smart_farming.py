@@ -32,6 +32,9 @@ if missing:
     print("Missing columns:", missing)
     exit(1)
 
+# Rename columns for clarity
+df = df.rename(columns={"n": "nitrogen", "p": "phosphorus", "k": "potassium"})
+
 # Derive new metrics
 def compute_crop_stress(row):
     # Normalize soil moisture & temperature
@@ -64,14 +67,14 @@ df["timestamp"] = date.today().isoformat()
 
 # Select useful fields for export
 export_cols = [
-    "timestamp","soil_type","n","p","k","temperature","humidity",
+    "timestamp","soil_type","nitrogen","phosphorus","potassium","temperature","humidity",
     "rainfall","ph","soil_moisture","crop_stress_index",
     "irrigation_recommendation","fire_risk_index","label"
 ]
 out_df = df[export_cols]
 
 # Export to JSON
-output_path = "data/smart_farming.json"
+output_path = "smart_farming.json"
 try:
     out_df.to_json(output_path, orient="records", indent=2)
     print(f"Saved {len(out_df)} records to {output_path}")
