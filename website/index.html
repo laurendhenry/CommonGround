@@ -544,7 +544,6 @@
                 display: none;
             }
 
-            .dashboard-preview,
             .contact-grid,
             .regional-container {
                 grid-template-columns: 1fr;
@@ -639,7 +638,6 @@
             margin-top: 1rem;
         }
         
-        /* Ensure chart container has proper dimensions */
         #combined_chart {
             width: 100% !important;
             height: 100% !important;
@@ -734,98 +732,6 @@
             font-weight: 700;
             color: #4a7c2c;
         }
-
-        /* API Predictions Styles */
-        .api-predictions-container {
-            margin-top: 4rem;
-            padding-top: 3rem;
-            border-top: 2px solid #e8ebe6;
-        }
-
-        .api-predictions-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .api-predictions-header h3 {
-            color: #2d5016;
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .refresh-btn {
-            padding: 0.8rem 2rem;
-            background: #4a7c2c;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .refresh-btn:hover {
-            background: #3a6322;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(74, 124, 44, 0.3);
-        }
-
-        .refresh-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .api-predictions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .api-prediction-card {
-            background: #f8faf6;
-            border-radius: 10px;
-            padding: 1.8rem;
-            border: 2px solid #e8ebe6;
-            transition: all 0.3s ease;
-        }
-
-        .api-prediction-card:hover {
-            border-color: #5a9c34;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .api-prediction-card .card-label {
-            font-size: 0.95rem;
-            color: #666;
-            margin-bottom: 0.8rem;
-            font-weight: 500;
-        }
-
-        .api-prediction-card .card-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #4a7c2c;
-        }
-
-        .api-prediction-card .card-status {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: #888;
-            font-style: italic;
-        }
-
-        .api-loading {
-            text-align: center;
-            color: #666;
-            font-size: 1rem;
-            padding: 2rem;
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
@@ -834,7 +740,6 @@
         <div class="nav-content">
             <div class="logo">
                 <svg class="logo-sunflower" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Petals -->
                     <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(0 100 100)"/>
                     <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(30 100 100)"/>
                     <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(60 100 100)"/>
@@ -847,7 +752,6 @@
                     <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(270 100 100)"/>
                     <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(300 100 100)"/>
                     <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(330 100 100)"/>
-                    <!-- Center -->
                     <circle cx="100" cy="100" r="35" fill="#8B4513"/>
                     <circle cx="100" cy="100" r="28" fill="#D2691E" opacity="0.7"/>
                 </svg>
@@ -872,7 +776,6 @@
     <section id="home">
         <div class="section-content hero-content">
             <svg class="hero-sunflower" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- Petals -->
                 <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(0 100 100)"/>
                 <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(30 100 100)"/>
                 <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(60 100 100)"/>
@@ -885,7 +788,6 @@
                 <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(270 100 100)"/>
                 <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FFEB3B" transform="rotate(300 100 100)"/>
                 <ellipse cx="100" cy="40" rx="15" ry="35" fill="#FDD835" transform="rotate(330 100 100)"/>
-                <!-- Center -->
                 <circle cx="100" cy="100" r="35" fill="#8B4513"/>
                 <circle cx="100" cy="100" r="28" fill="#D2691E" opacity="0.7"/>
             </svg>
@@ -1059,32 +961,19 @@
         <div class="section-content">
             <h2>Regional Insights</h2>
             <p class="section-description">
-                Interactive maps showing real-time regional trends across California. 
+                Interactive maps showing real-time fire and earthquake hazards across California.
             </p>
             <div class="regional-container">
                 <div id="map"></div>
                 <div class="map-controls">
                     <h3>Select Data Layer</h3>
-                    <p>Top 5 risk factors across California.</p>
                     <div class="map-feature" data-layer="fires">
-                        <div class="map-feature-icon">🔥</div>
+                        <div class="map-feature-icon"></div>
                         <h4>Forest Fires</h4>
                     </div>
                     <div class="map-feature" data-layer="earthquakes">
-                        <div class="map-feature-icon">🌍</div>
+                        <div class="map-feature-icon"></div>
                         <h4>Earthquakes</h4>
-                    </div>
-                    <div class="map-feature" data-layer="crops">
-                        <div class="map-feature-icon">💰</div>
-                        <h4>Crop Prices</h4>
-                    </div>
-                    <div class="map-feature" data-layer="yields">
-                        <div class="map-feature-icon">📊</div>
-                        <h4>Crop Yields</h4>
-                    </div>
-                    <div class="map-feature" data-layer="pests">
-                        <div class="map-feature-icon">🐛</div>
-                        <h4>Pests</h4>
                     </div>
                 </div>
             </div>
@@ -1147,7 +1036,6 @@
         </div>
     </section>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
@@ -1449,27 +1337,20 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
                 });
             });
         });
 
-        // Add active state to nav links on scroll
         window.addEventListener('scroll', () => {
             let current = '';
-            const sections = document.querySelectorAll('section');
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= sectionTop - 200) {
+            document.querySelectorAll('section').forEach(section => {
+                if (pageYOffset >= section.offsetTop - 200) {
                     current = section.getAttribute('id');
                 }
             });
-
             document.querySelectorAll('nav a').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href').slice(1) === current) {
@@ -1478,7 +1359,6 @@
             });
         });
 
-        // Button interactions
         document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', function() {
                 if (this.textContent === 'LOGIN' || this.textContent === 'SIGN UP') {
@@ -1491,16 +1371,12 @@
             });
         });
 
-        // Initialize Leaflet Map
         const map = L.map('map', { zoomControl: true }).setView([37.5, -119.5], 6);
-
-        // Clean base tiles
         L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: '© OpenStreetMap contributors',
         }).addTo(map);
 
-        // California boundary
         fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/california-counties.geojson')
             .then(res => res.json())
             .then(geo => {
@@ -1508,157 +1384,67 @@
             });
 
         let currentLayer = null;
-        let pulseMarkers = [];
 
         function clearMap() {
-            if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
-            pulseMarkers.forEach(m => {
-                if (m.interval) clearInterval(m.interval);
-                map.removeLayer(m.marker);
-            });
-            pulseMarkers = [];
-        }
-
-        function showEarthquakes() {
-            clearMap();
-
-            const seismicPoints = [
-                { lat: 35.77, lon: -120.3, mag: 4.2 },
-                { lat: 34.05, lon: -118.25, mag: 5.1 },
-                { lat: 37.3, lon: -121.8, mag: 4.6 },
-            ];
-
-            seismicPoints.forEach(p => {
-                const circle = L.circleMarker([p.lat, p.lon], {
-                    radius: 10, color: '#d32f2f', fillColor: '#d32f2f', fillOpacity: 0.5
-                }).addTo(map).bindPopup(`Magnitude ${p.mag} quake zone`);
-
-                let growing = true;
-                let size = 10;
-                const interval = setInterval(() => {
-                    if (growing) { size += 0.5; if (size >= 30) growing = false; }
-                    else { size -= 0.5; if (size <= 10) growing = true; }
-                    circle.setRadius(size);
-                    circle.setStyle({ fillOpacity: 0.4 * (30 - size)/20 + 0.1 });
-                }, 50);
-
-                pulseMarkers.push({ marker: circle, interval: interval });
-            });
+            if (currentLayer) { 
+                map.removeLayer(currentLayer); 
+                currentLayer = null; 
+            }
         }
 
         function showFires() {
             clearMap();
-
-            const fireData = [
-                [38.44, -122.66, 0.9],
-                [34.28, -119.29, 0.8],
-                [39.54, -121.63, 0.7],
-                [36.60, -121.89, 0.5],
-            ];
-
-            currentLayer = L.heatLayer(fireData, {
-                radius: 50,
-                blur: 30,
-                max: 1.0,
-                minOpacity: 0.4,
-                gradient: { 0.0: 'transparent', 0.5: '#ff6b35', 1.0: '#d32f2f' }
-            }).addTo(map);
-
-            fireData.forEach(p => {
-                const circle = L.circleMarker([p[0], p[1]], {
-                    radius: 15,
-                    color: '#ff9800',
-                    fillColor: '#ff9800',
-                    fillOpacity: 0.3,
-                }).addTo(map);
-
-                let growing = true;
-                let size = 15;
-                const interval = setInterval(() => {
-                    if (growing) { size += 0.3; if (size >= 30) growing = false; }
-                    else { size -= 0.3; if (size <= 15) growing = true; }
-                    circle.setRadius(size);
-                    circle.setStyle({ fillOpacity: 0.3 * (30 - size)/15 + 0.1 });
-                }, 50);
-
-                pulseMarkers.push({ marker: circle, interval: interval });
-            });
+            fetch('fireAndQuakes/cal_fire_heatmap.json')
+                .then(res => res.json())
+                .then(data => {
+                    currentLayer = L.geoJSON(data, {
+                        style: feature => {
+                            const score = feature.properties.fire_hazard_score;
+                            return {
+                                color: '#d32f2f',
+                                fillColor: score > 0.7 ? '#d32f2f' : score > 0.4 ? '#ff9800' : '#ffeb3b',
+                                weight: 1,
+                                fillOpacity: 0.6
+                            };
+                        },
+                        onEachFeature: (feature, layer) => {
+                            layer.bindPopup(`Fire hazard: ${feature.properties.fire_hazard_class}<br>Score: ${feature.properties.fire_hazard_score}`);
+                        }
+                    }).addTo(map);
+                });
         }
 
-        function showCrops() {
+        function showEarthquakes() {
             clearMap();
-            const cropPoints = [
-                { lat: 36.7, lon: -119.8, name: "Central Valley", price: "$$" },
-                { lat: 33.5, lon: -116.5, name: "Imperial Valley", price: "$" },
-            ];
-
-            cropPoints.forEach(p => {
-                L.circleMarker([p.lat, p.lon], {
-                    radius: 20, color: '#5a9c34', fillColor: '#5a9c34', fillOpacity: 0.6
-                }).addTo(map).bindPopup(`${p.name}: ${p.price}`);
-            });
+            fetch('fireAndQuakes/seismic_hazards.json')
+                .then(res => res.json())
+                .then(data => {
+                    currentLayer = L.geoJSON(data, {
+                        style: feature => {
+                            const score = feature.properties.seismic_hazard_score;
+                            return {
+                                color: score > 0.7 ? '#d32f2f' : score > 0.4 ? '#ff9800' : '#ffeb3b',
+                                weight: 2,
+                                fillOpacity: 0.4
+                            };
+                        },
+                        onEachFeature: (feature, layer) => {
+                            layer.bindPopup(`${feature.properties.location_name}<br>Seismic hazard: ${feature.properties.seismic_hazard_class}<br>Score: ${feature.properties.seismic_hazard_score}`);
+                        }
+                    }).addTo(map);
+                });
         }
 
-        function showYields() {
-            clearMap();
-            const yieldData = [
-                [36.7, -119.8, 0.9],
-                [33.5, -116.5, 0.7],
-            ];
-
-            currentLayer = L.heatLayer(yieldData, {
-                radius: 60,
-                blur: 40,
-                max: 1.0,
-                gradient: { 0.0: 'transparent', 0.5: '#8bc34a', 1.0: '#4a7c2c' }
-            }).addTo(map);
-        }
-
-        function showPests() {
-            clearMap();
-            const pestPoints = [
-                { lat: 37.5, lon: -121.5 },
-                { lat: 35.3, lon: -119.0 },
-            ];
-
-            pestPoints.forEach(p => {
-                L.circleMarker([p.lat, p.lon], {
-                    radius: 15, color: '#f44336', fillColor: '#f44336', fillOpacity: 0.4
-                }).addTo(map).bindPopup('Pest alert zone');
-            });
-        }
-
-        // Map feature interactions
         document.querySelectorAll('.map-feature').forEach(feature => {
             feature.addEventListener('click', function() {
-                // Remove active class from all
                 document.querySelectorAll('.map-feature').forEach(f => f.classList.remove('active'));
-                // Add active to clicked
                 this.classList.add('active');
-
                 const layer = this.getAttribute('data-layer');
-                
-                switch(layer) {
-                    case 'fires':
-                        showFires();
-                        break;
-                    case 'earthquakes':
-                        showEarthquakes();
-                        break;
-                    case 'crops':
-                        showCrops();
-                        break;
-                    case 'yields':
-                        showYields();
-                        break;
-                    case 'pests':
-                        showPests();
-                        break;
-                }
+                if (layer === 'fires') showFires();
+                if (layer === 'earthquakes') showEarthquakes();
             });
         });
 
-        // Show fires by default
         showFires();
         document.querySelector('[data-layer="fires"]').classList.add('active');
 
