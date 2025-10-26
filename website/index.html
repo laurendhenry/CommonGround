@@ -920,40 +920,6 @@
                 <div class="prediction-item">Resource Allocation Recommendation</div>
                 <div class="prediction-item">Climate Resilience Metrics</div>
             </div>
-
-            <!-- API-Driven Predictions -->
-            <div class="api-predictions-container">
-                <div class="api-predictions-header">
-                    <h3>Live AI Predictions</h3>
-                    <button class="refresh-btn" id="refresh-predictions-btn">Refresh Predictions</button>
-                </div>
-                <div class="api-predictions-grid" id="api-predictions-grid">
-                    <div class="api-prediction-card">
-                        <div class="card-label">Crop Stress Index</div>
-                        <div class="card-value" id="api-crop-stress">--</div>
-                    </div>
-                    <div class="api-prediction-card">
-                        <div class="card-label">Fire Risk Index</div>
-                        <div class="card-value" id="api-fire-risk">--</div>
-                    </div>
-                    <div class="api-prediction-card">
-                        <div class="card-label">Irrigation Recommendation</div>
-                        <div class="card-value" id="api-irrigation" style="font-size: 1.5rem;">--</div>
-                    </div>
-                    <div class="api-prediction-card">
-                        <div class="card-label">Pest Risk Level</div>
-                        <div class="card-value" id="api-pest-risk" style="font-size: 1.5rem;">--</div>
-                    </div>
-                    <div class="api-prediction-card">
-                        <div class="card-label">Yield Prediction</div>
-                        <div class="card-value" id="api-yield" style="font-size: 1.5rem;">--</div>
-                    </div>
-                    <div class="api-prediction-card">
-                        <div class="card-label">Soil Moisture</div>
-                        <div class="card-value" id="api-soil-moisture">--</div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -1451,97 +1417,7 @@
         // Initialize Adafruit IO when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initAdafruitIO();
-            initAgriculturalPredictions();
         });
-
-        // Agricultural Predictions with API Integration
-        let currentPredictions = null;
-
-        function initAgriculturalPredictions() {
-            const refreshBtn = document.getElementById('refresh-predictions-btn');
-            if (refreshBtn) {
-                refreshBtn.addEventListener('click', fetchAgriculturalPredictions);
-            }
-            // Load initial data on page load
-            fetchAgriculturalPredictions();
-        }
-
-        async function fetchAgriculturalPredictions() {
-            const refreshBtn = document.getElementById('refresh-predictions-btn');
-            
-            // Disable button and show loading state
-            if (refreshBtn) {
-                refreshBtn.disabled = true;
-                refreshBtn.textContent = 'Loading...';
-            }
-
-            try {
-                // Simulate loading delay for realistic demo
-                await new Promise(resolve => setTimeout(resolve, 500));
-
-                // TODO: Replace with your Postman Flow URL
-                // const API_URL = 'YOUR_POSTMAN_FLOW_URL_HERE';
-                // const response = await fetch(API_URL);
-                // const data = await response.json();
-                // const predictionData = Array.isArray(data) ? data[0] : data;
-
-                // Dummy data for demo purposes
-                const predictionData = {
-                    crop_stress_index: 0.42,
-                    fire_risk_index: 0.18,
-                    irrigation_recommendation: "Moderate",
-                    pest_risk: "Low",
-                    yield_prediction: "Above Average",
-                    soil_moisture: 65.2
-                };
-
-                // Update display
-                updatePredictionDisplay(predictionData);
-                currentPredictions = predictionData;
-
-            } catch (error) {
-                console.error('Error fetching predictions:', error);
-                // Keep old data visible on error
-            } finally {
-                if (refreshBtn) {
-                    refreshBtn.disabled = false;
-                    refreshBtn.textContent = 'Refresh Predictions';
-                }
-            }
-        }
-
-        function updatePredictionDisplay(data) {
-            // Format and display each metric
-            const cropStressEl = document.getElementById('api-crop-stress');
-            if (cropStressEl) {
-                cropStressEl.textContent = (data.crop_stress_index * 100).toFixed(1) + '%';
-            }
-
-            const fireRiskEl = document.getElementById('api-fire-risk');
-            if (fireRiskEl) {
-                fireRiskEl.textContent = (data.fire_risk_index * 100).toFixed(1) + '%';
-            }
-
-            const irrigationEl = document.getElementById('api-irrigation');
-            if (irrigationEl) {
-                irrigationEl.textContent = data.irrigation_recommendation || 'N/A';
-            }
-
-            const pestRiskEl = document.getElementById('api-pest-risk');
-            if (pestRiskEl) {
-                pestRiskEl.textContent = data.pest_risk || 'N/A';
-            }
-
-            const yieldEl = document.getElementById('api-yield');
-            if (yieldEl) {
-                yieldEl.textContent = data.yield_prediction || 'N/A';
-            }
-
-            const soilMoistureEl = document.getElementById('api-soil-moisture');
-            if (soilMoistureEl) {
-                soilMoistureEl.textContent = (data.soil_moisture || data.soil_moisture === 0) ? data.soil_moisture.toFixed(1) + '%' : 'N/A';
-            }
-        }
     </script>
 </body>
 </html>
