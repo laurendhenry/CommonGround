@@ -734,6 +734,98 @@
             font-weight: 700;
             color: #4a7c2c;
         }
+
+        /* API Predictions Styles */
+        .api-predictions-container {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 2px solid #e8ebe6;
+        }
+
+        .api-predictions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .api-predictions-header h3 {
+            color: #2d5016;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .refresh-btn {
+            padding: 0.8rem 2rem;
+            background: #4a7c2c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .refresh-btn:hover {
+            background: #3a6322;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 124, 44, 0.3);
+        }
+
+        .refresh-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .api-predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .api-prediction-card {
+            background: #f8faf6;
+            border-radius: 10px;
+            padding: 1.8rem;
+            border: 2px solid #e8ebe6;
+            transition: all 0.3s ease;
+        }
+
+        .api-prediction-card:hover {
+            border-color: #5a9c34;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .api-prediction-card .card-label {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .api-prediction-card .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4a7c2c;
+        }
+
+        .api-prediction-card .card-status {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        .api-loading {
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            padding: 2rem;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
@@ -925,6 +1017,40 @@
                 <div class="prediction-item">Disaster Risk Heat Map</div>
                 <div class="prediction-item">Resource Allocation Recommendation</div>
                 <div class="prediction-item">Climate Resilience Metrics</div>
+            </div>
+
+            <!-- API-Driven Predictions -->
+            <div class="api-predictions-container">
+                <div class="api-predictions-header">
+                    <h3>Live AI Predictions</h3>
+                    <button class="refresh-btn" id="refresh-predictions-btn">Refresh Predictions</button>
+                </div>
+                <div class="api-predictions-grid" id="api-predictions-grid">
+                    <div class="api-prediction-card">
+                        <div class="card-label">Crop Stress Index</div>
+                        <div class="card-value" id="api-crop-stress">--</div>
+                    </div>
+                    <div class="api-prediction-card">
+                        <div class="card-label">Fire Risk Index</div>
+                        <div class="card-value" id="api-fire-risk">--</div>
+                    </div>
+                    <div class="api-prediction-card">
+                        <div class="card-label">Irrigation Recommendation</div>
+                        <div class="card-value" id="api-irrigation" style="font-size: 1.5rem;">--</div>
+                    </div>
+                    <div class="api-prediction-card">
+                        <div class="card-label">Pest Risk Level</div>
+                        <div class="card-value" id="api-pest-risk" style="font-size: 1.5rem;">--</div>
+                    </div>
+                    <div class="api-prediction-card">
+                        <div class="card-label">Yield Prediction</div>
+                        <div class="card-value" id="api-yield" style="font-size: 1.5rem;">--</div>
+                    </div>
+                    <div class="api-prediction-card">
+                        <div class="card-label">Soil Moisture</div>
+                        <div class="card-value" id="api-soil-moisture">--</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1539,7 +1665,97 @@
         // Initialize Adafruit IO when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initAdafruitIO();
+            initAgriculturalPredictions();
         });
+
+        // Agricultural Predictions with API Integration
+        let currentPredictions = null;
+
+        function initAgriculturalPredictions() {
+            const refreshBtn = document.getElementById('refresh-predictions-btn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', fetchAgriculturalPredictions);
+            }
+            // Load initial data on page load
+            fetchAgriculturalPredictions();
+        }
+
+        async function fetchAgriculturalPredictions() {
+            const refreshBtn = document.getElementById('refresh-predictions-btn');
+            
+            // Disable button and show loading state
+            if (refreshBtn) {
+                refreshBtn.disabled = true;
+                refreshBtn.textContent = 'Loading...';
+            }
+
+            try {
+                // Simulate loading delay for realistic demo
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // TODO: Replace with your Postman Flow URL
+                // const API_URL = 'YOUR_POSTMAN_FLOW_URL_HERE';
+                // const response = await fetch(API_URL);
+                // const data = await response.json();
+                // const predictionData = Array.isArray(data) ? data[0] : data;
+
+                // Dummy data for demo purposes
+                const predictionData = {
+                    crop_stress_index: 0.42,
+                    fire_risk_index: 0.18,
+                    irrigation_recommendation: "Moderate",
+                    pest_risk: "Low",
+                    yield_prediction: "Above Average",
+                    soil_moisture: 65.2
+                };
+
+                // Update display
+                updatePredictionDisplay(predictionData);
+                currentPredictions = predictionData;
+
+            } catch (error) {
+                console.error('Error fetching predictions:', error);
+                // Keep old data visible on error
+            } finally {
+                if (refreshBtn) {
+                    refreshBtn.disabled = false;
+                    refreshBtn.textContent = 'Refresh Predictions';
+                }
+            }
+        }
+
+        function updatePredictionDisplay(data) {
+            // Format and display each metric
+            const cropStressEl = document.getElementById('api-crop-stress');
+            if (cropStressEl) {
+                cropStressEl.textContent = (data.crop_stress_index * 100).toFixed(1) + '%';
+            }
+
+            const fireRiskEl = document.getElementById('api-fire-risk');
+            if (fireRiskEl) {
+                fireRiskEl.textContent = (data.fire_risk_index * 100).toFixed(1) + '%';
+            }
+
+            const irrigationEl = document.getElementById('api-irrigation');
+            if (irrigationEl) {
+                irrigationEl.textContent = data.irrigation_recommendation || 'N/A';
+            }
+
+            const pestRiskEl = document.getElementById('api-pest-risk');
+            if (pestRiskEl) {
+                pestRiskEl.textContent = data.pest_risk || 'N/A';
+            }
+
+            const yieldEl = document.getElementById('api-yield');
+            if (yieldEl) {
+                yieldEl.textContent = data.yield_prediction || 'N/A';
+            }
+
+            const soilMoistureEl = document.getElementById('api-soil-moisture');
+            if (soilMoistureEl) {
+                soilMoistureEl.textContent = (data.soil_moisture || data.soil_moisture === 0) ? data.soil_moisture.toFixed(1) + '%' : 'N/A';
+            }
+        }
     </script>
 </body>
 </html>
