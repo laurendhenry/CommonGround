@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CommonGround - Empowering Farmers, Protecting Communities</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* ... KEEP ALL YOUR EXISTING STYLES HERE ... */
+
+        /* Regional Insights Section */
+        #regional {
+            background: linear-gradient(to bottom, #f8faf6, #ffffff);
+            padding: 120px 5% 80px 5%;
+        }
+
+        .regional-container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #map {
+            flex: 1;
+            height: 600px;
+            border-radius: 12px;
+            border: 2px solid #e8ebe6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .map-controls {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid #e8ebe6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .map-feature {
+            padding: 1rem 1.5rem;
+            background: #f8faf6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .map-feature:hover {
+            background: #eef3e9;
+            border-color: #5a9c34;
+            transform: translateX(5px);
+        }
+
+        .map-feature.active {
+            background: #5a9c34;
+            border-color: #5a9c34;
+        }
+
+        .map-feature.active h4 {
+            color: white;
+        }
+
+        .map-feature-icon {
+            font-size: 2rem;
+        }
+
+        .map-feature h4 {
+            color: #2d5016;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- ... KEEP YOUR NAV, HERO, ABOUT, DASHBOARD, PREDICTIONS SECTIONS ... -->
+
+    <section id="regional">
+        <div class="section-content">
+            <h2>Regional Insights</h2>
+            <p class="section-description">
+                Interactive maps showing real-time fire and earthquake hazards across California.
+            </p>
+            <div class="regional-container">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <h3>Select Data Layer</h3>
+                    <div class="map-feature" data-layer="fires">
+                        <div class="map-feature-icon">🔥</div>
+                        <h4>Forest Fires</h4>
+                    </div>
+                    <div class="map-feature" data-layer="earthquakes">
+                        <div class="map-feature-icon">🌍</div>
+                        <h4>Earthquakes</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+    <script>
+        // Initialize map
+        const map = L.map('map', { zoomControl: true }).setView([37.5, -119.5], 6);
+
+        L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors',
+        }).addTo(map);
+
+        // California boundary
+        fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/california-counties.geojson')
+            .then(res => res.json())
+            .then(geo => {
+                L.geoJSON(geo, { color: '#5a9c34', weight: 2, fillOpacity: 0 }).addTo(map);
+            });
+
+        let currentLayer = null;
+
+        function clearMap() {
+            if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
+        }
+
+        function showFires() {
+            clearMap();
+            fetch('fireAndQuakes/cal_fire_heatmap.json')
+                .then(res => res.json())
+                .then(data => {
+                    currentLayer = L.geoJSON(data, {
+                        style: feature => {
+                            const score = feature.properties.fire_hazard_score;
+                            return {
+                                color: '#d32f2f',
+                                fillColor: score > 0.7 ? '#d32f2f' : score > 0.4 ? '#ff9800' : '#ffeb3b',
+                                weight: 1,
+                                fillOpacity: 0.6
+                            };
+                        },
+                        onEachFeature: (feature, layer) => {
+                            layer.bindPopup(`Fire hazard: ${feature.properties.fire_hazard_class}<br>Score: ${feature.properties.fire_hazard_score}`);
+                        }
+                    }).addTo(map);
+                });
+        }
+
+        function showEarthquakes() {
+            clearMap();
+            fetch('fireAndQuakes/seismic_hazards.json')
+                .then(res => res.json())
+                .then(data => {
+                    currentLayer = L.geoJSON(data, {
+                        style: feature => {
+                            const score = feature.properties.seismic_hazard_score;
+                            return {
+                                color: score > 0.7 ? '#d32f2f' : score > 0.4 ? '#ff9800' : '#ffeb3b',
+                                weight: 2,
+                                fillOpacity: 0.4
+                            };
+                        },
+                        onEachFeature: (feature, layer) => {
+                            const loc = feature.properties.location_name;
+                            const hazard = feature.properties.seismic_hazard_class;
+                            layer.bindPopup(`${loc}<br>Seismic hazard: ${hazard}<br>Score: ${feature.properties.seismic_hazard_score}`);
+                        }
+                    }).addTo(map);
+                });
+        }
+
+        // Map feature controls
+        document.querySelectorAll('.map-feature').forEach(feature => {
+            feature.addEventListener('click', function() {
+                document.querySelectorAll('.map-feature').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                const layer = this.getAttribute('data-layer');
+                if (layer === 'fires') showFires();
+                if (layer === 'earthquakes') showEarthquakes();
+            });
+        });
+
+        // Default layer
+        showFires();
+        document.querySelector('[data-layer="fires"]').classList.add('active');
+    </script>
+</body>
+</html>
