@@ -242,6 +242,13 @@
         /* Dashboard Section */
         #dashboard {
             background: linear-gradient(to bottom, #f8faf6, #ffffff);
+            min-height: auto;
+            align-items: flex-start;
+        }
+        
+        #dashboard .section-content {
+            max-width: 1200px;
+            width: 100%;
         }
 
         .dashboard-preview {
@@ -579,7 +586,156 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(10px); }
         }
+
+        /* Live Sensor Feed Styles */
+        .sensor-feeds-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .sensor-feed-card {
+            background: white;
+            border: 2px solid #e8ebe6;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .sensor-feed-card:hover {
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .feed-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d5016;
+        }
+
+        .feed-status {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .feed-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #4a7c2c;
+            margin-bottom: 1rem;
+        }
+
+        .feed-graph {
+            width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+        }
+        
+        /* Ensure chart container has proper dimensions */
+        #combined_chart {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .fire-status-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .fire-indicator {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .fire-indicator.safe {
+            background: #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .fire-indicator.danger {
+            background: #f44336;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        .fire-status-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .fire-status-text.safe {
+            color: #4CAF50;
+        }
+
+        .fire-status-text.danger {
+            color: #f44336;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4a7c2c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .current-value-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8faf6;
+            border-radius: 8px;
+            border: 1px solid #e8ebe6;
+        }
+
+        .value-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .value-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4a7c2c;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
 <body>
     <nav>
@@ -693,26 +849,58 @@
             <p class="section-description">
                 Your command center for real-time farm monitoring and insights.
             </p>
-            <div class="dashboard-preview">
-                <div class="dashboard-card">
-                    <h3>🌡️ Climate Monitoring</h3>
-                    <ul>
-                        <li>Real-time temperature tracking</li>
-                        <li>Humidity data collection</li>
-                        <li>Integration with Open-Meteo</li>
-                        <li>Regional weather comparison</li>
-                        <li>Historical trend analysis</li>
-                    </ul>
+            <div class="sensor-feeds-container">
+                <!-- Combined Sensor Graph -->
+                <div class="sensor-feed-card">
+                    <div class="feed-header">
+                        <div class="feed-name">📊 Live Sensor Data</div>
+                        <div class="feed-status" id="combined_status">Loading...</div>
+                    </div>
+                    <div style="width: 100%; height: 300px; position: relative;">
+                        <canvas id="combined_chart"></canvas>
+                    </div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>🔥 Fire Detection System</h3>
-                    <ul>
-                        <li>Real-time flame sensors</li>
-                        <li>Instant SMS alerts</li>
-                        <li>Seasonal fire risk plotting</li>
-                        <li>Emergency response integration</li>
-                        <li>Community notification system</li>
-                    </ul>
+
+                <!-- Individual Current Values -->
+                <div class="sensor-feed-card">
+                    <div class="feed-header">
+                        <div class="feed-name">🌡️ Current Values</div>
+                        <div class="feed-status" id="values_status">Loading...</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div class="current-value-item">
+                            <div class="value-label">Regional Temperature</div>
+                            <div class="value-number" id="api_temp_value">--°C</div>
+                        </div>
+                        <div class="current-value-item">
+                            <div class="value-label">Regional Humidity</div>
+                            <div class="value-number" id="api_humidity_value">--%</div>
+                        </div>
+                        <div class="current-value-item">
+                            <div class="value-label">Local Farm Temperature</div>
+                            <div class="value-number" id="temp_value">--°C</div>
+                        </div>
+                        <div class="current-value-item">
+                            <div class="value-label">Local Farm Humidity</div>
+                            <div class="value-number" id="humidity_value">--%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fire Detection Feed -->
+                <div class="sensor-feed-card">
+                    <div class="feed-header">
+                        <div class="feed-name">Fire Detection</div>
+                        <div class="feed-status" id="fire_status">Loading...</div>
+                    </div>
+                    <div class="fire-status-container">
+                        <div class="fire-indicator safe" id="fire_indicator">
+                            ✓
+                        </div>
+                        <div class="fire-status-text safe" id="fire_status_text">
+                            Safe
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -840,7 +1028,297 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
+    <!-- Load config (contains API keys) -->
+    <script src="config.js"></script>
+
     <script>
+
+        // Chart instance storage
+        let combinedChart = null;
+        const feedData = {};
+
+        // Initialize Adafruit IO integration
+        function initAdafruitIO() {
+            if (!ADAFRUIT_CONFIG || !ADAFRUIT_CONFIG.key || ADAFRUIT_CONFIG.key === 'YOUR_API_KEY_HERE') {
+                console.log('Please create website/config.js with your Adafruit IO API key (see config.js.example)');
+                showApiKeyError();
+                return;
+            }
+
+            // Initialize combined chart
+            initializeCombinedChart();
+            
+            // Start fetching data
+            fetchAllFeeds();
+            
+            // Set up polling
+            setInterval(fetchAllFeeds, 30000); // Poll every 30 seconds
+        }
+
+        // Show API key error
+        function showApiKeyError() {
+            const statusElements = ['combined_status', 'values_status', 'fire_status'];
+            statusElements.forEach(statusId => {
+                const statusEl = document.getElementById(statusId);
+                if (statusEl) {
+                    statusEl.textContent = 'Config file required';
+                    statusEl.style.color = '#f44336';
+                }
+            });
+        }
+
+        // Initialize combined Chart.js instance
+        function initializeCombinedChart() {
+            const ctx = document.getElementById('combined_chart');
+            if (ctx) {
+                combinedChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'Regional Temperature (°C)',
+                                data: [],
+                                borderColor: '#e74c3c',
+                                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Regional Humidity (%)',
+                                data: [],
+                                borderColor: '#3498db',
+                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Local Temperature (°C)',
+                                data: [],
+                                borderColor: '#f39c12',
+                                backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Local Humidity (%)',
+                                data: [],
+                                borderColor: '#27ae60',
+                                backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: {
+                                    color: '#e8ebe6'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: '#e8ebe6'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Fetch data from all feeds
+        async function fetchAllFeeds() {
+            let successCount = 0;
+            const totalFeeds = ADAFRUIT_CONFIG.feeds.length;
+            
+            for (const feed of ADAFRUIT_CONFIG.feeds) {
+                try {
+                    await fetchFeedData(feed);
+                    successCount++;
+                } catch (error) {
+                    console.error(`Error fetching ${feed}:`, error);
+                }
+            }
+            
+            // Update status based on success rate
+            if (successCount === totalFeeds) {
+                updateCombinedStatus('Online', '#4CAF50');
+            } else if (successCount > 0) {
+                updateCombinedStatus('Partial', '#f39c12');
+            } else {
+                updateCombinedStatus('Offline', '#f44336');
+            }
+        }
+
+        // Fetch data from a specific feed
+        async function fetchFeedData(feedName) {
+            const url = `${ADAFRUIT_CONFIG.baseUrl}/${ADAFRUIT_CONFIG.username}/feeds/${feedName}/data/last`;
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'X-AIO-Key': ADAFRUIT_CONFIG.key
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log(`Fetched ${feedName}:`, data);
+                updateFeedDisplay(feedName, data);
+                
+            } catch (error) {
+                console.error(`Failed to fetch ${feedName}:`, error);
+            }
+        }
+
+        // Update feed display with new data
+        function updateFeedDisplay(feedName, data) {
+            const isFireSensor = feedName === 'fire';
+            const value = isFireSensor ? data.value : parseFloat(data.value);
+            const timestamp = new Date(data.created_at);
+            
+            // Store data for charts
+            if (!feedData[feedName]) {
+                feedData[feedName] = [];
+            }
+            
+            feedData[feedName].push({
+                value: value,
+                timestamp: timestamp
+            });
+            
+            // Keep only last 20 data points
+            if (feedData[feedName].length > 20) {
+                feedData[feedName] = feedData[feedName].slice(-20);
+            }
+
+            // Handle fire sensor separately
+            if (isFireSensor) {
+                updateFireDisplay(value);
+                return;
+            }
+
+            // Update current value display for other sensors
+            // Map feed names to display element IDs
+            const feedDisplayMap = {
+                'api-temp': 'api_temp_value',
+                'api-humidity': 'api_humidity_value',
+                'temperature': 'temp_value',
+                'humidity': 'humidity_value'
+            };
+            
+            const displayElementId = feedDisplayMap[feedName];
+            const valueEl = displayElementId ? document.getElementById(displayElementId) : null;
+            
+            if (valueEl) {
+                const unit = (feedName.includes('temp') || feedName === 'temperature') ? '°C' : '%';
+                valueEl.textContent = `${value.toFixed(1)}${unit}`;
+            }
+
+            // Update combined chart
+            updateCombinedChart();
+        }
+
+        // Update fire detection display
+        function updateFireDisplay(value) {
+            const indicator = document.getElementById('fire_indicator');
+            const statusText = document.getElementById('fire_status_text');
+            const statusEl = document.getElementById('fire_status');
+            
+            console.log('Fire value:', value, 'Type:', typeof value, 'String compare:', value === "1", 'Number compare:', value === 1);
+            
+            // Handle both string "1" and number 1, or "0" and 0
+            const fireDetected = value === 1 || value === "1" || value === true;
+            
+            if (fireDetected) {
+                // Fire detected
+                indicator.className = 'fire-indicator danger';
+                indicator.textContent = '!';
+                statusText.className = 'fire-status-text danger';
+                statusText.textContent = 'FIRE DETECTED';
+                if (statusEl) statusEl.textContent = 'Alert';
+                if (statusEl) statusEl.style.color = '#f44336';
+            } else {
+                // Safe
+                indicator.className = 'fire-indicator safe';
+                indicator.textContent = '✓';
+                statusText.className = 'fire-status-text safe';
+                statusText.textContent = 'Safe';
+                if (statusEl) statusEl.textContent = 'Online';
+                if (statusEl) statusEl.style.color = '#4CAF50';
+            }
+        }
+
+        // Update combined chart with new data
+        function updateCombinedChart() {
+            if (!combinedChart) return;
+
+            // Map actual feed names to dataset indices
+            const feedToDatasetMap = {
+                'api-temp': 0,        // Dataset 0: API Temperature
+                'api-humidity': 1,    // Dataset 1: API Humidity
+                'temperature': 2,     // Dataset 2: Local Temperature
+                'humidity': 3         // Dataset 3: Local Humidity
+            };
+            
+            const datasets = combinedChart.data.datasets;
+            
+            // Update each dataset based on available feed data
+            Object.keys(feedToDatasetMap).forEach(feedName => {
+                const datasetIndex = feedToDatasetMap[feedName];
+                if (feedData[feedName] && feedData[feedName].length > 0) {
+                    datasets[datasetIndex].data = feedData[feedName].map(d => d.value);
+                    datasets[datasetIndex].label = feedName.replace('-', ' ').replace('api', 'API');
+                }
+            });
+            
+            // Update labels (use timestamps from first available feed)
+            const allFeeds = ['api-temp', 'api-humidity', 'temperature', 'humidity'];
+            const firstFeed = allFeeds.find(feed => feedData[feed] && feedData[feed].length > 0);
+            if (firstFeed && feedData[firstFeed]) {
+                combinedChart.data.labels = feedData[firstFeed].map(d => d.timestamp.toLocaleTimeString());
+            }
+            
+            combinedChart.update();
+        }
+
+        // Update combined status
+        function updateCombinedStatus(status, color) {
+            const statusEl = document.getElementById('combined_status');
+            const valuesStatusEl = document.getElementById('values_status');
+            
+            if (statusEl) {
+                statusEl.textContent = status;
+                statusEl.style.color = color;
+            }
+            if (valuesStatusEl) {
+                valuesStatusEl.textContent = status;
+                valuesStatusEl.style.color = color;
+            }
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1057,6 +1535,11 @@
         // Show fires by default
         showFires();
         document.querySelector('[data-layer="fires"]').classList.add('active');
+
+        // Initialize Adafruit IO when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initAdafruitIO();
+        });
     </script>
 </body>
 </html>
